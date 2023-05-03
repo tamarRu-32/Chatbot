@@ -47,14 +47,20 @@ namespace ListPlugin
             {
                 string[] ToDelete = input.Message.Split(' ');
 				int index;
+                int flag = 0;
                 if (ToDelete.Length != 1)
-                    int.TryParse(ToDelete[1], out index);
-                else
+                {
+					int.TryParse(ToDelete[1], out index);
+                    index--;
+                    flag = 1;
+				}
+				else
                     index = list.Count - 1;
 				list.RemoveAt(index);
                 var data = new PersistentDataStructure(list);
+                var mas = flag==1 ? $"Delete {index+1} task" : $"Delete last task";
 
-                return new PluginOutput($"Delete last task", JsonSerializer.Serialize(data));
+				return new PluginOutput(mas, JsonSerializer.Serialize(data));
             }
             else if (input.Message.ToLower() == "list")
             {
